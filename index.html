@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>公告更新</title>
+</head>
+<body>
+	<h3>当后台有公告更新，服务器就主动给客户端发送更新的公告</h3>
+
+	<ul id="news">
+		
+		
+	</ul>
+	<script>
+		
+		 var es = new EventSource("./updateData.php");
+		 var data;
+
+		 es.onopen = function () {
+		 	console.log('have conneted', this.readyState);
+		 }
+
+		 es.onmessage = function (e) {
+
+		 	//服务器没有新数据就返回，防止后面代码出错
+		 	if (e.data == '') {
+
+		 		return;
+		 	}
+		 	
+		 	data = JSON.parse(e.data);
+
+		 	for (var i = 0;i< data.length; i++) {
+
+				document.getElementById('news').innerHTML += '<li>'+data[i]['content']+'</li>';		 		
+		 	}
+
+		 }
+
+	</script>
+</body>
+</html>
